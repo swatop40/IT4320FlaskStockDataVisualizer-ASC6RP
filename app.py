@@ -23,7 +23,7 @@ def load_symbols_from_csv():
     return symbols
 
 def fetch_data(symbol: str, series: str):
-    """Call Alpha Vantage and return the raw time-series JSON block."""
+    """Call Alpha Vantage and return the raw time-series JSON block and function name."""
     function = FUNCTION_MAP.get(series.lower(), "TIME_SERIES_DAILY")
 
     url = (
@@ -34,17 +34,21 @@ def fetch_data(symbol: str, series: str):
     resp = requests.get(url)
     data = resp.json()
 
+    print("API response keys:", list(data.keys()))
+
     ts_key = next((k for k in data.keys() if "Time Series" in k), None)
     if ts_key is None:
-        print("No time series key found in response:", data)
-        return None
+        print("No time series key found in response. Full response:", data)
+        return None, function
 
     return data[ts_key], function
+
 
 
 def get_stock_dataframe(symbol: str, series: str):
     """Return a cleaned pandas DataFrame with OHLCV data."""
     ts_data, function = fetch_data(symbol, series)
+
     if ts_data is None:
         return None, function
 
@@ -153,4 +157,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
+
