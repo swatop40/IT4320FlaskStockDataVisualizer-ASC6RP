@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Data Visualizer</title>
+    <style>
+        body {
+            background-color: #e6eff8;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: white;
+            width: 60%;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2a5d9f;
+        }
+        label {
+            font-weight: bold;
+        }
+        .form-row {
+            margin: 15px 0;
+        }
+        button {
+            background-color: #2a5d9f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #1b3d6d;
+        }
+        .chart-container {
+            margin-top: 25px;
+        }
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Stock Data Visualizer</h1>
+
+        <form method="POST">
+            <div class="form-row">
+                <label>Select Symbol:</label><br>
+                <select name="symbol">
+                    {% for s in symbols %}
+                        <option value="{{ s }}">{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label>Select Time Series:</label><br>
+                <select name="series">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label>Select Chart Type:</label><br>
+                <select name="chart_type">
+                    <option value="line">Line</option>
+                    <option value="bar">Bar</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label>Start Date:</label><br>
+                <input type="date" name="start">
+            </div>
+
+            <div class="form-row">
+                <label>End Date:</label><br>
+                <input type="date" name="end">
+            </div>
+
+            <button type="submit">Generate Chart</button>
+        </form>
+
+        {% if chart_svg %}
+            <div class="chart-container">
+                {{ chart_svg|safe }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
